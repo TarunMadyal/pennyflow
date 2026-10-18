@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f1e8">
+  <meta name="description" content="PennyFlow — a private, mobile-first personal finance tracker.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <title>PennyFlow</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="PennyFlow home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>PennyFlow</span>
+      </a>
+      <div class="top-actions">
+        <button class="icon-btn" id="privacyToggle" aria-label="Hide money amounts" title="Privacy mode">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+        </button>
+        <button class="avatar" aria-label="Open profile">RS</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="view active" data-view="home">
+        <div class="hero-head">
+          <div>
+            <p class="eyebrow">Good morning</p>
+            <h1>Your money,<br><em>made clear.</em></h1>
+          </div>
+          <label class="month-control">
+            <span class="sr-only">Reporting month</span>
+            <select id="monthSelect"><option>October 2026</option><option>September 2026</option><option>August 2026</option></select>
+          </label>
+        </div>
+
+        <article class="balance-card">
+          <div>
+            <span class="label">Safe to spend</span>
+            <div class="hero-amount money" data-value="18420">₹18,420</div>
+            <span class="subtle">for the next 13 days</span>
+          </div>
+          <div class="pace-badge"><span>↓</span> 8% under pace</div>
+          <div class="balance-track"><i style="width:62%"></i></div>
+          <div class="balance-meta"><span>₹29,580 spent</span><span>₹48,000 plan</span></div>
+        </article>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-icon income">↗</div><span class="label">Income</span>
+            <strong class="money" data-value="76000">₹76,000</strong><small>+4.2% from Sep</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon expense">↘</div><span class="label">Spent</span>
+            <strong class="money" data-value="29580">₹29,580</strong><small>38.9% of income</small>
+          </article>
+          <article class="stat-card">
+            <div class="stat-icon saved">⌁</div><span class="label">Saved</span>
+            <strong class="money" data-value="12400">₹12,400</strong><small>16.3% savings rate</small>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div><p class="eyebrow">Where it went</p><h2>Spending by category</h2></div>
+          <button class="text-btn" data-go="transactions">See all →</button>
+        </div>
+        <article class="category-card">
+          <div class="donut-wrap">
+            <div class="donut" id="categoryDonut"><div><b class="money" data-value="29580">₹29.6k</b><span>total spent</span></div></div>
+            <div class="legend" id="categoryLegend"></div>
+          </div>
+        </article>
+
+        <div class="section-head">
+          <div><p class="eyebrow">Worth a look</p><h2>Smart insights</h2></div>
+        </div>
+        <div class="insight-scroll">
+          <article class="insight-card saffron">
+            <div class="insight-icon">✦</div><span class="pill">Pattern found</span>
+            <h3>Your food delivery is up 31%</h3><p>That’s ₹1,240 more than last month. Cooking twice this week could recover about ₹700.</p>
+            <button class="text-btn">View food spending →</button>
+          </article>
+          <article class="insight-card teal">
+            <div class="insight-icon">◎</div><span class="pill">Subscription check</span>
+            <h3>Two plans overlap</h3><p>You pay ₹199 for Spotify and ₹119 for YouTube Music. Reviewing one could save ₹1,428 a year.</p>
+            <button class="text-btn">Review subscriptions →</button>
+          </article>
+        </div>
+
+        <div class="section-head">
+          <div><p class="eyebrow">Latest activity</p><h2>Recent transactions</h2></div>
+          <button class="text-btn" data-go="transactions">View all →</button>
+        </div>
+        <div class="transaction-list" id="recentTransactions"></div>
+      </section>
+
+      <section class="view" data-view="transactions">
+        <div class="page-head"><div><p class="eyebrow">Every rupee accounted for</p><h1>Transactions</h1></div><button class="primary small" data-modal="addModal">+ Add</button></div>
+        <div class="summary-strip"><div><span>October total</span><b class="money" id="transactionTotal">₹0</b></div><div><span>Transactions</span><b id="transactionCount">0</b></div><div><span>Daily average</span><b class="money" id="dailyAverage">₹0</b></div></div>
+        <div class="search-row"><label class="search"><span>⌕</span><input id="searchInput" placeholder="Search merchant or note"></label><button class="filter-btn" id="filterBtn">All categories⌄</button></div>
+        <div class="category-chips" id="categoryChips"></div>
+        <div class="transaction-list full" id="allTransactions"></div>
+      </section>
+
+      <section class="view" data-view="plan">
+        <div class="page-head"><div><p class="eyebrow">Your monthly guardrails</p><h1>Plan</h1></div><button class="outline small" id="editBudgets">Edit budgets</button></div>
+        <article class="plan-hero"><div><span class="label">Monthly budget</span><strong class="money">₹48,000</strong></div><div class="mini-ring"><span>62%</span></div></article>
+        <div class="section-head"><div><p class="eyebrow">Category budgets</p><h2>Keep your pace</h2></div></div>
+        <div class="budget-list" id="budgetList"></div>
+        <div class="section-head"><div><p class="eyebrow">Goals</p><h2>Future you will thank you</h2></div><button class="text-btn">+ New goal</button></div>
+        <div class="goal-grid">
+          <article class="goal-card"><span class="goal-art">✈</span><div><span class="label">Japan trip</span><strong class="money">₹74,500</strong><small>of ₹1,50,000 · 50%</small></div><div class="progress"><i style="width:50%"></i></div><span class="goal-date">Target · Mar 2027</span></article>
+          <article class="goal-card"><span class="goal-art green">☂</span><div><span class="label">Emergency fund</span><strong class="money">₹1,82,000</strong><small>of ₹3,00,000 · 61%</small></div><div class="progress"><i style="width:61%"></i></div><span class="goal-date">3.6 months covered</span></article>
+        </div>
+      </section>
+
+      <section class="view" data-view="reports">
+        <div class="page-head"><div><p class="eyebrow">The bigger picture</p><h1>Reports</h1></div><button class="outline small" id="exportBtn">Export</button></div>
+        <div class="report-tabs"><button class="active">Cash flow</button><button>Categories</button><button>Merchants</button></div>
+        <article class="report-card"><div class="report-card-head"><div><span class="label">6-month cash flow</span><strong class="money">+₹2,68,420</strong><small>Net money retained</small></div><span class="positive">↑ 12.4%</span></div><svg class="line-chart" viewBox="0 0 680 220" role="img" aria-label="Six month income and spending chart"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f6a5b" stop-opacity=".25"/><stop offset="1" stop-color="#1f6a5b" stop-opacity="0"/></linearGradient></defs><g class="gridlines"><path d="M30 35H650M30 85H650M30 135H650M30 185H650"/></g><path class="area" d="M30 130 C90 105 120 114 155 82 S235 52 280 71 S365 112 405 70 S500 42 530 65 S610 88 650 45 V205 H30Z"/><path class="income-line" d="M30 130 C90 105 120 114 155 82 S235 52 280 71 S365 112 405 70 S500 42 530 65 S610 88 650 45"/><path class="spend-line" d="M30 168 C90 154 120 170 155 145 S235 121 280 142 S365 168 405 132 S500 120 530 138 S610 152 650 121"/><g class="axis"><text x="30" y="218">May</text><text x="150" y="218">Jun</text><text x="270" y="218">Jul</text><text x="390" y="218">Aug</text><text x="510" y="218">Sep</text><text x="625" y="218">Oct</text></g></svg><div class="chart-key"><span><i class="income-dot"></i>Income</span><span><i class="spend-dot"></i>Spending</span></div></article>
+        <div class="report-grid"><article><span class="label">Top category</span><strong>Food & dining</strong><b class="money">₹8,240</b><small>27.9% of spending</small></article><article><span class="label">Top merchant</span><strong>Amazon</strong><b class="money">₹4,990</b><small>3 purchases</small></article><article><span class="label">Fixed costs</span><strong>Home & bills</strong><b class="money">₹11,340</b><small>38.3% of spending</small></article><article><span class="label">Subscriptions</span><strong>6 active</strong><b class="money">₹1,423/mo</b><small>Next: Netflix · Oct 22</small></article></div>
+      </section>
+
+      <section class="view" data-view="connect">
+        <div class="page-head"><div><p class="eyebrow">Bring your money together</p><h1>Connections</h1></div></div>
+        <article class="privacy-note"><span>⌾</span><div><strong>Your data stays yours</strong><p>Imports are processed on this device in this prototype. You review every match before it is added.</p></div></article>
+        <div class="connection-list">
+          <article><div class="connection-icon samsung">S</div><div><strong>Samsung Wallet</strong><small>Import an exported transaction file</small></div><span class="status manual">File import</span><button data-modal="importModal">Import</button></article>
+          <article><div class="connection-icon sms">✉</div><div><strong>Bank SMS messages</strong><small>Paste debit alerts; PennyFlow extracts amount and merchant</small></div><span class="status ready">Ready</span><button data-modal="importModal">Try it</button></article>
+          <article><div class="connection-icon bank">₹</div><div><strong>Bank statement</strong><small>CSV import with duplicate detection</small></div><span class="status ready">Ready</span><button data-modal="importModal">Import</button></article>
+          <article><div class="connection-icon upi">U</div><div><strong>UPI apps</strong><small>Google Pay, PhonePe, Paytm exports or SMS receipts</small></div><span class="status manual">Import</span><button data-modal="importModal">Connect</button></article>
+        </div>
+        <article class="native-callout"><div><p class="eyebrow">Next build</p><h2>Automatic Android capture</h2><p>A native Android companion can ask for Notification Access and process bank/payment alerts on-device. Samsung Wallet does not offer broad consumer transaction access to ordinary web apps, so this must be permission-based—not silent surveillance.</p></div><span class="phone-art">▱<i>₹</i></span></article>
+        <div class="section-head"><div><p class="eyebrow">Your rules</p><h2>Smart categorization</h2></div></div>
+        <div class="rule-list"><div><span>If merchant contains <b>Chaayos</b></span><strong>→ Food & dining</strong></div><div><span>If SMS contains <b>UBER</b></span><strong>→ Transport</strong></div><div><span>If merchant contains <b>Amazon</b></span><strong>→ Ask each time</strong></div></div>
+      </section>
+    </main>
+
+    <button class="fab" data-modal="addModal" aria-label="Add transaction">+</button>
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="active" data-nav="home"><span>⌂</span>Overview</button>
+      <button data-nav="transactions"><span>↕</span>Activity</button>
+      <button data-nav="plan"><span>◔</span>Plan</button>
+      <button data-nav="reports"><span>⌁</span>Reports</button>
+      <button data-nav="connect"><span>⚭</span>Connect</button>
+    </nav>
+  </div>
+
+  <dialog id="addModal">
+    <form method="dialog" id="addForm">
+      <div class="modal-head"><div><p class="eyebrow">Quick entry</p><h2>Add transaction</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <label>Amount<div class="amount-input"><span>₹</span><input name="amount" type="number" min="1" step="0.01" placeholder="0" required inputmode="decimal"></div></label>
+      <div class="two-col"><label>Merchant<input name="merchant" placeholder="e.g. Chai Point" required></label><label>Date<input name="date" type="date" value="2026-10-18" required></label></div>
+      <label>Category<select name="category"><option>Food & dining</option><option>Shopping</option><option>Transport</option><option>Home & bills</option><option>Health</option><option>Entertainment</option><option>Other</option></select></label>
+      <label>Note <span class="optional">optional</span><input name="note" placeholder="What was this for?"></label>
+      <button class="primary wide" value="default">Add transaction</button>
+    </form>
+  </dialog>
+
+  <dialog id="importModal">
+    <form method="dialog" id="importForm">
+      <div class="modal-head"><div><p class="eyebrow">Private import</p><h2>Paste payment alerts</h2></div><button value="cancel" class="close-btn">×</button></div>
+      <p class="modal-copy">Paste one SMS per line. We’ll detect the amount, merchant, date, and likely category. You can review before saving.</p>
+      <textarea id="importText" rows="7">INR 10.00 paid to CHAI POINT via UPI on 18-10-26
+Rs.10 debited from A/c XX4321 at GREEN NURSERY on 18/10/26
+INR 1,000 paid using Samsung Wallet at CROSSWORD BOOKS on 17-10-26</textarea>
+      <div class="parse-preview" id="parsePreview"></div>
+      <button class="outline wide" type="button" id="parseBtn">Preview transactions</button>
+      <button class="primary wide" id="importBtn" value="default" disabled>Import selected</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
