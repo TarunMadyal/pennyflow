@@ -1,0 +1,44 @@
+const categories={"Food & dining":{color:"#1f6a5b",icon:"☕"},Shopping:{color:"#ed9d3b",icon:"◒"},Transport:{color:"#d9634c",icon:"⌁"},"Home & bills":{color:"#8d78ad",icon:"⌂"},Health:{color:"#5683a1",icon:"✚"},Entertainment:{color:"#b8aaa1",icon:"▶"},Other:{color:"#87938e",icon:"•"}};
+const starter=[
+ {id:1,merchant:"Crossword Books",category:"Shopping",amount:1000,date:"2026-10-17",source:"Samsung Wallet",note:"The Creative Act"},
+ {id:2,merchant:"Chai Point",category:"Food & dining",amount:10,date:"2026-10-18",source:"UPI",note:"Tea"},
+ {id:3,merchant:"Green Nursery",category:"Shopping",amount:10,date:"2026-10-18",source:"Bank SMS",note:"Plant"},
+ {id:4,merchant:"BigBasket",category:"Food & dining",amount:2340,date:"2026-10-16",source:"UPI",note:"Groceries"},
+ {id:5,merchant:"Uber",category:"Transport",amount:284,date:"2026-10-16",source:"Samsung Wallet",note:"Office ride"},
+ {id:6,merchant:"Netflix",category:"Entertainment",amount:649,date:"2026-10-15",source:"HDFC Bank",note:"Monthly subscription"},
+ {id:7,merchant:"BESCOM",category:"Home & bills",amount:1824,date:"2026-10-14",source:"Bank transfer",note:"Electricity"},
+ {id:8,merchant:"Amazon",category:"Shopping",amount:3990,date:"2026-10-13",source:"Credit card",note:"Headphones"},
+ {id:9,merchant:"Apollo Pharmacy",category:"Health",amount:783,date:"2026-10-12",source:"UPI",note:"Medicines"},
+ {id:10,merchant:"Swiggy",category:"Food & dining",amount:624,date:"2026-10-11",source:"UPI",note:"Dinner"}
+];
+let transactions=JSON.parse(localStorage.getItem("pennyflow.transactions")||"null")||starter;
+let selectedCategory="All", parsed=[];
+const fmt=n=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(n);
+const shortDate=d=>new Intl.DateTimeFormat("en-IN",{day:"numeric",month:"short"}).format(new Date(d+"T12:00:00"));
+const iconFor=c=>categories[c]||categories.Other;
+function txHTML(t){const c=iconFor(t.category);return `<div class="transaction-row"><div class="tx-icon" style="background:${c.color}18;color:${c.color}">${c.icon}</div><div><strong>${escapeHTML(t.merchant)}</strong><small>${escapeHTML(t.category)} · ${shortDate(t.date)} · ${escapeHTML(t.source)}</small></div><div class="tx-amount"><b class="money">−${fmt(t.amount)}</b><small>${escapeHTML(t.note||"")}</small></div></div>`}
+function escapeHTML(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+function render(){
+ const sorted=[...transactions].sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+ document.querySelector("#recentTransactions").innerHTML=sorted.slice(0,5).map(txHTML).join("");
+ const q=document.querySelector("#searchInput")?.value.toLowerCase()||"";
+ const filtered=sorted.filter(t=>(selectedCategory==="All"||t.category===selectedCategory)&&(`${t.merchant} ${t.note}`.toLowerCase().includes(q)));
+ document.querySelector("#allTransactions").innerHTML=filtered.map(txHTML).join("")||'<p style="padding:28px;text-align:center;color:#6c7772">No matching transactions.</p>';
+ const total=transactions.reduce((s,t)=>s+t.amount,0);document.querySelector("#transactionTotal").textContent=fmt(total);document.querySelector("#transactionCount").textContent=transactions.length;document.querySelector("#dailyAverage").textContent=fmt(total/18);
+ renderLegend();renderBudgets();
+}
+function renderLegend(){const sums={};transactions.forEach(t=>sums[t.category]=(sums[t.category]||0)+t.amount);const top=Object.entries(sums).sort((a,b)=>b[1]-a[1]).slice(0,6);const total=top.reduce((s,x)=>s+x[1],0)||1;let at=0,stops=[];top.forEach(([name,val])=>{const end=at+val/total*100;stops.push(`${iconFor(name).color} ${at}% ${end}%`);at=end});document.querySelector("#categoryDonut").style.background=`conic-gradient(${stops.join(",")})`;document.querySelector("#categoryLegend").innerHTML=top.map(([n,v])=>`<div class="legend-item"><i style="background:${iconFor(n).color}"></i><span>${n}</span><b class="money">${fmt(v)}</b></div>`).join("")}
+function renderBudgets(){const budgets={"Food & dining":9000,Shopping:7000,Transport:5000,"Home & bills":14000,Entertainment:2500,Health:3000};const sums={};transactions.forEach(t=>sums[t.category]=(sums[t.category]||0)+t.amount);document.querySelector("#budgetList").innerHTML=Object.entries(budgets).map(([n,b])=>{const spent=sums[n]||0,p=Math.min(100,Math.round(spent/b*100)),cls=p>90?"over":p>70?"warn":"";return `<div class="budget-row"><div class="budget-top"><strong>${n}</strong><span class="money">${fmt(spent)} / ${fmt(b)}</span><small>${Math.max(0,100-p)}% remaining</small></div><div class="progress"><i class="${cls}" style="width:${p}%"></i></div></div>`}).join("")}
+function nav(view){document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.dataset.view===view));document.querySelectorAll("[data-nav]").forEach(x=>x.classList.toggle("active",x.dataset.nav===view));scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>nav(b.dataset.nav));document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>nav(b.dataset.go));
+document.querySelectorAll("[data-modal]").forEach(b=>b.onclick=()=>document.querySelector(`#${b.dataset.modal}`).showModal());
+document.querySelector("#privacyToggle").onclick=()=>document.body.classList.toggle("privacy");
+document.querySelector("#searchInput").addEventListener("input",render);
+const chips=["All",...Object.keys(categories)];document.querySelector("#categoryChips").innerHTML=chips.map((x,i)=>`<button class="${i===0?"active":""}">${x}</button>`).join("");document.querySelectorAll("#categoryChips button").forEach(b=>b.onclick=()=>{selectedCategory=b.textContent;document.querySelectorAll("#categoryChips button").forEach(x=>x.classList.toggle("active",x===b));render()});
+document.querySelector("#addForm").addEventListener("submit",e=>{if(e.submitter?.value==="cancel")return;const f=new FormData(e.target);transactions.push({id:Date.now(),amount:Number(f.get("amount")),merchant:f.get("merchant"),date:f.get("date"),category:f.get("category"),note:f.get("note"),source:"Manual"});save();showToast("Transaction added and categorized");e.target.reset();render()});
+function detectCategory(m){m=m.toLowerCase();if(/chai|cafe|coffee|swiggy|zomato|restaurant|grocery/.test(m))return"Food & dining";if(/uber|ola|metro|fuel|petrol/.test(m))return"Transport";if(/book|amazon|nursery|store|mart/.test(m))return"Shopping";if(/netflix|spotify|cinema|youtube/.test(m))return"Entertainment";if(/pharmacy|hospital|clinic/.test(m))return"Health";if(/electric|bescom|rent|broadband/.test(m))return"Home & bills";return"Other"}
+document.querySelector("#parseBtn").onclick=()=>{const lines=document.querySelector("#importText").value.split(/\n+/).filter(Boolean);parsed=lines.map((line,i)=>{const am=line.match(/(?:inr|rs\.?|₹)\s*([\d,]+(?:\.\d+)?)/i);const date=line.match(/(\d{1,2})[-\/]([01]?\d)[-\/](\d{2,4})/);let merchant=(line.match(/(?:to|at)\s+([A-Z][A-Z\s&]+?)(?:\s+(?:via|on|using)|$)/)||[])[1]||"Imported payment";merchant=merchant.trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());let ds="2026-10-18";if(date){let y=date[3].length===2?`20${date[3]}`:date[3];ds=`${y}-${date[2].padStart(2,"0")}-${date[1].padStart(2,"0")}`}return{id:Date.now()+i,merchant,amount:Number((am?.[1]||"0").replace(/,/g,"")),date:ds,category:detectCategory(merchant),source:/samsung/i.test(line)?"Samsung Wallet":"Bank SMS",note:"Imported alert"}}).filter(x=>x.amount>0);document.querySelector("#parsePreview").innerHTML=parsed.map((x,i)=>`<label class="parse-row"><input type="checkbox" checked data-parse="${i}"><span><b>${escapeHTML(x.merchant)}</b><br>${x.category}</span><strong>${fmt(x.amount)}</strong></label>`).join("");document.querySelector("#importBtn").disabled=!parsed.length};
+document.querySelector("#importForm").addEventListener("submit",e=>{if(e.submitter?.value==="cancel")return;const picks=[...document.querySelectorAll("[data-parse]:checked")].map(x=>parsed[+x.dataset.parse]);transactions.push(...picks);save();render();showToast(`${picks.length} transactions imported separately`)});
+function save(){localStorage.setItem("pennyflow.transactions",JSON.stringify(transactions))}function showToast(msg){const t=document.querySelector("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400)}
+document.querySelector("#exportBtn").onclick=()=>{const blob=new Blob(["date,merchant,category,amount,source,note\n"+transactions.map(t=>[t.date,t.merchant,t.category,t.amount,t.source,t.note].map(v=>`"${String(v||"").replace(/"/g,'""')}"`).join(",")).join("\n")],{type:"text/csv"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pennyflow-transactions.csv";a.click();URL.revokeObjectURL(a.href);showToast("CSV report downloaded")};
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");render();
