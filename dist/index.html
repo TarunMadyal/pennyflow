@@ -40,26 +40,26 @@
         <article class="balance-card">
           <div>
             <span class="label">Safe to spend</span>
-            <div class="hero-amount money" data-value="18420">₹18,420</div>
-            <span class="subtle">for the next 13 days</span>
+            <div class="hero-amount money" id="safeToSpend">₹0</div>
+            <span class="subtle" id="safeToSpendNote">Add a monthly plan to begin</span>
           </div>
           <div class="pace-badge"><span>↓</span> 8% under pace</div>
-          <div class="balance-track"><i style="width:62%"></i></div>
-          <div class="balance-meta"><span>₹29,580 spent</span><span>₹48,000 plan</span></div>
+          <div class="balance-track"><i id="balanceProgress" style="width:0%"></i></div>
+          <div class="balance-meta"><span id="balanceSpent">₹0 spent</span><span id="balancePlan">₹0 plan</span></div>
         </article>
 
         <div class="stats-grid">
           <article class="stat-card">
             <div class="stat-icon income">↗</div><span class="label">Income</span>
-            <strong class="money" data-value="76000">₹76,000</strong><small>+4.2% from Sep</small>
+            <strong class="money" id="incomeAmount">₹0</strong><small>Add income to see comparisons</small>
           </article>
           <article class="stat-card">
             <div class="stat-icon expense">↘</div><span class="label">Spent</span>
-            <strong class="money" data-value="29580">₹29,580</strong><small>38.9% of income</small>
+            <strong class="money" id="spentAmount">₹0</strong><small id="spentRate">No spending yet</small>
           </article>
           <article class="stat-card">
             <div class="stat-icon saved">⌁</div><span class="label">Saved</span>
-            <strong class="money" data-value="12400">₹12,400</strong><small>16.3% savings rate</small>
+            <strong class="money" id="savedAmount">₹0</strong><small id="savedRate">Set an income to begin</small>
           </article>
         </div>
 
@@ -69,7 +69,7 @@
         </div>
         <article class="category-card">
           <div class="donut-wrap">
-            <div class="donut" id="categoryDonut"><div><b class="money" data-value="29580">₹29.6k</b><span>total spent</span></div></div>
+            <div class="donut" id="categoryDonut"><div><b class="money" id="categoryTotal">₹0</b><span>total spent</span></div></div>
             <div class="legend" id="categoryLegend"></div>
           </div>
         </article>
@@ -78,15 +78,15 @@
           <div><p class="eyebrow">Worth a look</p><h2>Smart insights</h2></div>
         </div>
         <div class="insight-scroll">
-          <article class="insight-card saffron">
+          <article class="insight-card saffron" id="primaryInsight">
             <div class="insight-icon">✦</div><span class="pill">Pattern found</span>
-            <h3>Your food delivery is up 31%</h3><p>That’s ₹1,240 more than last month. Cooking twice this week could recover about ₹700.</p>
-            <button class="text-btn">View food spending →</button>
+            <h3>No patterns yet</h3><p>Add or import transactions and PennyFlow will explain where your money is going.</p>
+            <button class="text-btn" data-modal="addModal">Add first expense →</button>
           </article>
           <article class="insight-card teal">
             <div class="insight-icon">◎</div><span class="pill">Subscription check</span>
-            <h3>Two plans overlap</h3><p>You pay ₹199 for Spotify and ₹119 for YouTube Music. Reviewing one could save ₹1,428 a year.</p>
-            <button class="text-btn">Review subscriptions →</button>
+            <h3>No subscriptions detected</h3><p>Recurring charges will appear here after you import a few weeks of activity.</p>
+            <button class="text-btn" data-go="connect">Import activity →</button>
           </article>
         </div>
 
@@ -107,25 +107,25 @@
 
       <section class="view" data-view="plan">
         <div class="page-head"><div><p class="eyebrow">Your monthly guardrails</p><h1>Plan</h1></div><button class="outline small" id="editBudgets">Edit budgets</button></div>
-        <article class="plan-hero"><div><span class="label">Monthly budget</span><strong class="money">₹48,000</strong></div><div class="mini-ring"><span>62%</span></div></article>
+        <article class="plan-hero"><div><span class="label">Monthly budget</span><strong class="money">₹0</strong></div><div class="mini-ring" style="background:conic-gradient(var(--green) 0%,rgba(255,255,255,.5) 0)"><span>0%</span></div></article>
         <div class="section-head"><div><p class="eyebrow">Category budgets</p><h2>Keep your pace</h2></div></div>
         <div class="budget-list" id="budgetList"></div>
         <div class="section-head"><div><p class="eyebrow">Goals</p><h2>Future you will thank you</h2></div><button class="text-btn">+ New goal</button></div>
         <div class="goal-grid">
-          <article class="goal-card"><span class="goal-art">✈</span><div><span class="label">Japan trip</span><strong class="money">₹74,500</strong><small>of ₹1,50,000 · 50%</small></div><div class="progress"><i style="width:50%"></i></div><span class="goal-date">Target · Mar 2027</span></article>
-          <article class="goal-card"><span class="goal-art green">☂</span><div><span class="label">Emergency fund</span><strong class="money">₹1,82,000</strong><small>of ₹3,00,000 · 61%</small></div><div class="progress"><i style="width:61%"></i></div><span class="goal-date">3.6 months covered</span></article>
+          <article class="goal-card"><span class="goal-art">✈</span><div><span class="label">First savings goal</span><strong class="money">₹0</strong><small>No target set · 0%</small></div><div class="progress"><i style="width:0%"></i></div><span class="goal-date">Create a goal when you’re ready</span></article>
+          <article class="goal-card"><span class="goal-art green">☂</span><div><span class="label">Emergency fund</span><strong class="money">₹0</strong><small>No target set · 0%</small></div><div class="progress"><i style="width:0%"></i></div><span class="goal-date">Nothing saved yet</span></article>
         </div>
       </section>
 
       <section class="view" data-view="reports">
         <div class="page-head"><div><p class="eyebrow">The bigger picture</p><h1>Reports</h1></div><button class="outline small" id="exportBtn">Export</button></div>
         <div class="report-tabs"><button class="active">Cash flow</button><button>Categories</button><button>Merchants</button></div>
-        <article class="report-card"><div class="report-card-head"><div><span class="label">6-month cash flow</span><strong class="money">+₹2,68,420</strong><small>Net money retained</small></div><span class="positive">↑ 12.4%</span></div><svg class="line-chart" viewBox="0 0 680 220" role="img" aria-label="Six month income and spending chart"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f6a5b" stop-opacity=".25"/><stop offset="1" stop-color="#1f6a5b" stop-opacity="0"/></linearGradient></defs><g class="gridlines"><path d="M30 35H650M30 85H650M30 135H650M30 185H650"/></g><path class="area" d="M30 130 C90 105 120 114 155 82 S235 52 280 71 S365 112 405 70 S500 42 530 65 S610 88 650 45 V205 H30Z"/><path class="income-line" d="M30 130 C90 105 120 114 155 82 S235 52 280 71 S365 112 405 70 S500 42 530 65 S610 88 650 45"/><path class="spend-line" d="M30 168 C90 154 120 170 155 145 S235 121 280 142 S365 168 405 132 S500 120 530 138 S610 152 650 121"/><g class="axis"><text x="30" y="218">May</text><text x="150" y="218">Jun</text><text x="270" y="218">Jul</text><text x="390" y="218">Aug</text><text x="510" y="218">Sep</text><text x="625" y="218">Oct</text></g></svg><div class="chart-key"><span><i class="income-dot"></i>Income</span><span><i class="spend-dot"></i>Spending</span></div></article>
-        <div class="report-grid"><article><span class="label">Top category</span><strong>Food & dining</strong><b class="money">₹8,240</b><small>27.9% of spending</small></article><article><span class="label">Top merchant</span><strong>Amazon</strong><b class="money">₹4,990</b><small>3 purchases</small></article><article><span class="label">Fixed costs</span><strong>Home & bills</strong><b class="money">₹11,340</b><small>38.3% of spending</small></article><article><span class="label">Subscriptions</span><strong>6 active</strong><b class="money">₹1,423/mo</b><small>Next: Netflix · Oct 22</small></article></div>
+        <article class="report-card"><div class="report-card-head"><div><span class="label">6-month cash flow</span><strong class="money">₹0</strong><small>No cash-flow history yet</small></div><span class="positive">0%</span></div><svg class="line-chart" viewBox="0 0 680 220" role="img" aria-label="Empty six month cash flow chart"><g class="gridlines"><path d="M30 35H650M30 85H650M30 135H650M30 185H650"/></g><path class="income-line" d="M30 185H650"/><path class="spend-line" d="M30 185H650"/><g class="axis"><text x="30" y="218">May</text><text x="150" y="218">Jun</text><text x="270" y="218">Jul</text><text x="390" y="218">Aug</text><text x="510" y="218">Sep</text><text x="625" y="218">Oct</text></g></svg><div class="chart-key"><span><i class="income-dot"></i>Income</span><span><i class="spend-dot"></i>Spending</span></div></article>
+        <div class="report-grid"><article><span class="label">Top category</span><strong>None yet</strong><b class="money">₹0</b><small>Add transactions to calculate</small></article><article><span class="label">Top merchant</span><strong>None yet</strong><b class="money">₹0</b><small>No purchases recorded</small></article><article><span class="label">Fixed costs</span><strong>None yet</strong><b class="money">₹0</b><small>No bills recorded</small></article><article><span class="label">Subscriptions</span><strong>0 active</strong><b class="money">₹0/mo</b><small>No recurring charges found</small></article></div>
       </section>
 
       <section class="view" data-view="connect">
-        <div class="page-head"><div><p class="eyebrow">Bring your money together</p><h1>Connections</h1></div></div>
+        <div class="page-head"><div><p class="eyebrow">Bring your money together</p><h1>Connections</h1></div><button class="outline small danger" id="resetData">Reset all data</button></div>
         <article class="privacy-note"><span>⌾</span><div><strong>Your data stays yours</strong><p>Imports are processed on this device in this prototype. You review every match before it is added.</p></div></article>
         <div class="connection-list">
           <article><div class="connection-icon samsung">S</div><div><strong>Samsung Wallet</strong><small>Import an exported transaction file</small></div><span class="status manual">File import</span><button data-modal="importModal">Import</button></article>
@@ -164,9 +164,7 @@
     <form method="dialog" id="importForm">
       <div class="modal-head"><div><p class="eyebrow">Private import</p><h2>Paste payment alerts</h2></div><button value="cancel" class="close-btn">×</button></div>
       <p class="modal-copy">Paste one SMS per line. We’ll detect the amount, merchant, date, and likely category. You can review before saving.</p>
-      <textarea id="importText" rows="7">INR 10.00 paid to CHAI POINT via UPI on 18-10-26
-Rs.10 debited from A/c XX4321 at GREEN NURSERY on 18/10/26
-INR 1,000 paid using Samsung Wallet at CROSSWORD BOOKS on 17-10-26</textarea>
+      <textarea id="importText" rows="7" placeholder="Paste one bank or payment alert per line"></textarea>
       <div class="parse-preview" id="parsePreview"></div>
       <button class="outline wide" type="button" id="parseBtn">Preview transactions</button>
       <button class="primary wide" id="importBtn" value="default" disabled>Import selected</button>
